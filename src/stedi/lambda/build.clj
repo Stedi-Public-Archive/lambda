@@ -58,11 +58,14 @@
       (wrap-debug)
       (wrap-throw-on-nonzero)))
 
+(defn- deps
+  []
+  (-> (slurp "deps.edn")
+      (read-string)))
+
 (defn- project-paths
   []
-  (-> "deps.edn"
-      (slurp)
-      (read-string)
+  (-> (deps)
       (:paths)))
 
 (defn target-zip
@@ -85,4 +88,6 @@
     (shutdown-agents)))
 
 (defn -main []
+  (when-not (get-in (deps) [:deps 'stedi/lambda])
+    (throw (Exception. "Could not find stedi/lambda in :deps, did you forget to include it?")))
   (bundle-all))
