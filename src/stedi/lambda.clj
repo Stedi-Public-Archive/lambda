@@ -16,15 +16,14 @@
        (io/copy stream# os#))))
 
 (defn- make-handler-function
-  [name args body]
-  `(defn ~name ~args
-     ~@body))
+  [name body]
+  `(def ~name ~@body))
 
 (defmacro deflambda
   "Defines an AWS lambda function. Takes a request map (similar to ring)
   and can return a string or anything coerceable by
   `clojure.java.io/input-stream`"
-  [name args & body]
+  [name & body]
   (let [entrypoint (str *ns* "/" name)]
     (if (= entrypoint *entrypoint*)
       (do
@@ -37,11 +36,11 @@
                                   java.io.OutputStream
                                   com.amazonaws.services.lambda.runtime.Context]
                                  ~'void]])
-           ~(make-handler-function name args body)
+           ~(make-handler-function name body)
            ~(make-lambda-entrypoint name)))
       (do
         (when-not *compile-files*
           (require 'stedi.lambda.registry)
           (let [add-lambda (requiring-resolve 'stedi.lambda.registry/add-lambda)]
             (add-lambda entrypoint)))
-        (make-handler-function name args body)))))
+        (make-handler-function name body)))))
