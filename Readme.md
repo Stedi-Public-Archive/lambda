@@ -8,25 +8,36 @@ Clojure projects.
 This is only available through git deps right now:
 
 ``` clojure
-{:git/url "https://github.com/stediinc/lambda"
- :sha     "<insert sha>"}
+{:deps {stedi/lambda {:git/url "https://github.com/stediinc/lambda"
+                      :sha     "<insert sha>"}}}
 ```
 
 ## Getting Started
 
 `stedi/lambda` expects lambda handlers to be declared with the
-`stedi.lambda/defhandler` macro. Using this macro will register the
-function as a lambda handler so the build tool knows what to compile.
+`stedi.lambda/deflambda` macro. Using this macro will register a
+lambda handler so the build tool knows what to compile.
 
 **Example**
 
 ``` clojure
 (ns stedi.example
-  (:require [stedi.lambda :refer [defhandler]]))
+  (:require [stedi.lambda :refer [deflambda]]))
 
-(defnlambda my-lambda
-  [{:keys [input]}]
-  (pr-str {:input (slurp input)})
+(defn wrap-slurp
+  "Example middleware to show off middleware pattern with lambdas."
+  [handler]
+  (fn [{:keys [input-stream] :as req}]
+    (let [resp (handler (-> req
+                            (assoc :payload (slurp input-stream))))]
+      {:output (pr-str resp)})))
+
+(defn hello [{:keys [payload]}]
+  {:my-payload payload})
+
+(deflambda hello-lambda
+  (-> hello
+      (wrap-slurp)))
 ```
 
 **Building**
