@@ -1,0 +1,2 @@
+{:paths ["src"]
+ :deps  {com.amazonaws/aws-lambda-java-core {:mvn/version "1.2.0"}}}
