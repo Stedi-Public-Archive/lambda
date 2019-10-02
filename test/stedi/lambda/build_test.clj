@@ -1,7 +1,6 @@
 (ns stedi.lambda.build-test
   (:require [clojure.java.io :as io]
-            [clojure.test :refer [deftest testing is]]
-            [stedi.lambda.build :as build])
+            [clojure.test :refer [deftest testing is]])
   (:import [java.io ByteArrayOutputStream]))
 
 ;; Note: you have to run `clojure -m stedi.lambda.build` in the `./example` directory
