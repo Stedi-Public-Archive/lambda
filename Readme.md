@@ -15,14 +15,14 @@ This is only available through git deps right now:
 ## Getting Started
 
 `stedi/lambda` expects lambda handlers to be declared with the
-`stedi.lambda/deflambda` macro. Using this macro will register a
+`stedi.lambda/defentrypoint` macro. Using this macro will register a
 lambda handler so the build tool knows what to compile.
 
 **Example**
 
 ``` clojure
 (ns stedi.example
-  (:require [stedi.lambda :refer [deflambda]]))
+  (:require [stedi.lambda :refer [defentrypoint]]))
 
 (defn wrap-slurp
   "Example middleware to show off middleware pattern with lambdas."
@@ -35,7 +35,7 @@ lambda handler so the build tool knows what to compile.
 (defn hello [{:keys [payload]}]
   {:my-payload payload})
 
-(deflambda hello-lambda
+(defentrypoint hello-lambda
   (-> hello
       (wrap-slurp)))
 ```
