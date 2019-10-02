@@ -72,7 +72,7 @@
   [entrypoint]
   (str "target/lambda/" entrypoint ".jar"))
 
-(defn bundle
+(defn- bundle
   [entrypoint]
   (let [classes    (compile/target-dir entrypoint)
         target-zip (target-zip entrypoint)]
@@ -80,14 +80,14 @@
     (shell {:args (compile-args entrypoint)})
     (shell {:args (pack-args classes target-zip)})))
 
-(defn bundle-all
+(defn- bundle-all
   []
   (let [paths (project-paths)]
     (doseq [entrypoint (registry/find-entrypoints paths)]
-      (bundle entrypoint))
-    (shutdown-agents)))
+      (bundle entrypoint))))
 
 (defn -main []
   (when-not (get-in (deps) [:deps 'stedi/lambda])
     (throw (Exception. "Could not find stedi/lambda in :deps, did you forget to include it?")))
-  (bundle-all))
+  (bundle-all)
+  (shutdown-agents))

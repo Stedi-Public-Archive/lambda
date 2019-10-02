@@ -1,2 +1,6 @@
-{:paths ["src"]
- :deps  {com.amazonaws/aws-lambda-java-core {:mvn/version "1.2.0"}}}
+{:paths   ["src"]
+ :deps    {com.amazonaws/aws-lambda-java-core {:mvn/version "1.2.0"}}
+ :aliases {:dev  {:extra-paths ["test" "example/target/lambda/stedi.example/hello-lambda/classes"]
+                  :extra-deps  {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                                                           :sha     "cb96e80f6f3d3b307c59cbeb49bb0dcb3a2a780b"}}}
+           :test {:main-opts ["-m" "cognitect.test-runner"]}}}

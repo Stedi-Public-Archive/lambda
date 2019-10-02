@@ -1,3 +1,5 @@
 **/.cpcache
 **/.nrepl-port
-**/target
+**/target/**
+!**/target/**/
+!**/target/**/.gitkeep
