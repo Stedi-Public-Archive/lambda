@@ -1,5 +1,5 @@
 (ns stedi.example
-  (:require [stedi.lambda :refer [deflambda]]))
+  (:require [stedi.lambda :refer [defentrypoint]]))
 
 (defn wrap-slurp
   "Example middleware to show off middleware pattern with lambdas."
@@ -12,6 +12,6 @@
 (defn hello [{:keys [payload]}]
   {:my-payload payload})
 
-(deflambda hello-lambda
+(defentrypoint hello-lambda
   (-> hello
       (wrap-slurp)))

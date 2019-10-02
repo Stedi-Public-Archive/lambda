@@ -3,7 +3,7 @@
   classes with their dependencies."
   (:require [clojure.java.io :as io]
             [clojure.java.shell :as sh]
-            [stedi.lambda.analyze :as analyze]
+            [stedi.lambda.registry :as registry]
             [stedi.lambda.compile :as compile]))
 
 (def ^:private build-deps
@@ -83,7 +83,7 @@
 (defn bundle-all
   []
   (let [paths (project-paths)]
-    (doseq [entrypoint (analyze/analyze paths)]
+    (doseq [entrypoint (registry/find-entrypoints paths)]
       (bundle entrypoint))
     (shutdown-agents)))
 

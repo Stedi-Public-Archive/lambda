@@ -1,19 +1,25 @@
 (ns stedi.lambda.registry
-  "A registry to track loaded lambda entrypoint functions.")
+  "A registry to track loaded lambda entrypoints."
+  (:require [clojure.java.io :as io]))
 
-(defonce ^:private ^:dynamic *registry* (atom #{}))
+(def ^:private ^:dynamic *registry* nil)
 
-(defn registry
-  "Retrieves the current value of the registry."
-  []
-  @*registry*)
-
-(defn clear!
-  "Clears all entries from the registry."
-  []
-  (reset! *registry* #{}))
-
-(defn add-lambda
+(defn add-entrypoint
   "Adds lambda entrypoint to registry."
   [entrypoint]
-  (swap! *registry* conj entrypoint))
+  (when *registry*
+    (swap! *registry* conj entrypoint)))
+
+(defn find-entrypoints
+  [paths]
+  (binding [*registry* (atom #{})]
+    (let [files (->> paths
+                     (mapcat (comp file-seq io/file))
+                     (map str)
+                     (filter #(.endsWith % ".clj")))]
+      (doseq [file files]
+        (println "[analyze] Checking for lambdas in" file)
+        (load-file file))
+      (let [found @*registry*]
+        (println "[analyze] Found entrypoints" (pr-str found))
+        found))))

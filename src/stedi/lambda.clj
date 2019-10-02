@@ -1,7 +1,9 @@
 (ns stedi.lambda
   (:require [clojure.java.io :as io]))
 
-(def ^:dynamic *entrypoint* nil)
+(def ^{:doc     "The name of the current endpoint being compiled by `stedi.lambda.compile`"
+       :dynamic true}
+  *compile-entrypoint* nil)
 
 (defn- make-lambda-entrypoint
   [handler-name]
@@ -19,13 +21,20 @@
   [name body]
   `(def ~name ~@body))
 
-(defmacro deflambda
-  "Defines an AWS lambda function. Takes a request map (similar to ring)
-  and can return a string or anything coerceable by
-  `clojure.java.io/input-stream`"
+(defmacro defentrypoint
+  "Defines a lambda entrypoint, its value should resolve to a function
+  that takes a lambda request map and returns a lambda response map.
+
+  Request Map:
+    :input-stream - an input stream of the payload
+    :context      - an instance of `com.amazonaws.services.lambda.runtime.Context`
+
+  Response Map:
+    :output - a String or anything coercable by `clojure.java.io/input-stream`
+              to be returned as the response"
   [name & body]
   (let [entrypoint (str *ns* "/" name)]
-    (if (= entrypoint *entrypoint*)
+    (if (= entrypoint *compile-entrypoint*)
       (do
         (println "[compiling]" entrypoint)
         `(do
@@ -41,6 +50,6 @@
       (do
         (when-not *compile-files*
           (require 'stedi.lambda.registry)
-          (let [add-lambda (requiring-resolve 'stedi.lambda.registry/add-lambda)]
+          (let [add-lambda (requiring-resolve 'stedi.lambda.registry/add-entrypoint)]
             (add-lambda entrypoint)))
         (make-handler-function name body)))))
