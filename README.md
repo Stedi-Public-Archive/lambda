@@ -12,6 +12,8 @@ This is only available through git deps right now:
                       :sha     "<insert sha>"}}}
 ```
 
+Testing 1 2 3
+
 ## Getting Started
 
 `stedi/lambda` expects Lambda handlers to be declared with the
