@@ -30,7 +30,7 @@
     :context      - an instance of `com.amazonaws.services.lambda.runtime.Context`
 
   Response Map:
-    :output - a String or anything coercable by `clojure.java.io/input-stream`
+    :output - a String or anything coercible by `clojure.java.io/input-stream`
               to be returned as the response"
   [name & body]
   (let [entrypoint (str *ns* "/" name)]
