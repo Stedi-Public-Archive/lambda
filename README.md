@@ -25,11 +25,15 @@ Lambda handler so the build tool knows what to compile.
   (:require [stedi.lambda :refer [defentrypoint]]))
 
 (defn wrap-slurp
-  "Example middleware to show off middleware pattern with Lambdas."
+  "Example middleware to demonstrate middleware pattern with Lambdas.
+
+  See doc for `stedi.lambda/defentrypoint`"
   [handler]
+  ;; input-stream is a java.io.InputStream
   (fn [{:keys [input-stream] :as req}]
-    (let [resp (handler (-> req
-                            (assoc :payload (slurp input-stream))))]
+    (let [resp (handler (assoc req :payload (slurp input-stream)))]
+      ;; :output can be a String or anything coercable
+      ;; by `clojure.java.io/input-stream`
       {:output (pr-str resp)})))
 
 (defn hello [{:keys [payload]}]
