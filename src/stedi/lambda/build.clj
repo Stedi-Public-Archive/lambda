@@ -86,8 +86,10 @@
     (doseq [entrypoint (registry/find-entrypoints paths)]
       (bundle entrypoint))))
 
-(defn -main []
+(defn -main [& [entrypoint]]
   (when-not (get-in (deps) [:deps 'stedi/lambda])
     (throw (Exception. "Could not find stedi/lambda in :deps, did you forget to include it?")))
-  (bundle-all)
+  (if entrypoint
+    (bundle entrypoint)
+    (bundle-all))
   (shutdown-agents))
