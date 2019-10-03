@@ -49,6 +49,11 @@ clj -m stedi.lambda.build
 This will generate jar files in the `target` directory that can be
 uploaded to AWS Lambda.
 
+**Configuration**
+
+In the AWS Lambda console, set the
+`Handler` to `stedi.lambda.Entrypoint::handler`.
+
 ## Philosophy
 
 `stedi/lambda` keeps dependencies to a minimum and provides a
