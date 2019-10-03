@@ -32,7 +32,7 @@ Lambda handler so the build tool knows what to compile.
   ;; input-stream is a java.io.InputStream
   (fn [{:keys [input-stream] :as req}]
     (let [resp (handler (assoc req :payload (slurp input-stream)))]
-      ;; :output can be a String or anything coercable
+      ;; :output can be a String or anything coercible
       ;; by `clojure.java.io/input-stream`
       {:output (pr-str resp)})))
 
