@@ -16,7 +16,7 @@ This is only available through git deps right now:
 
 `stedi/lambda` expects Lambda handlers to be declared with the
 `stedi.lambda/defentrypoint` macro. Using this macro will register a
-lambda handler so the build tool knows what to compile.
+Lambda handler so the build tool knows what to compile.
 
 **Example**
 
@@ -25,7 +25,7 @@ lambda handler so the build tool knows what to compile.
   (:require [stedi.lambda :refer [defentrypoint]]))
 
 (defn wrap-slurp
-  "Example middleware to show off middleware pattern with lambdas."
+  "Example middleware to show off middleware pattern with Lambdas."
   [handler]
   (fn [{:keys [input-stream] :as req}]
     (let [resp (handler (-> req
