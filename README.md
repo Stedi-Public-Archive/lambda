@@ -29,9 +29,9 @@ Lambda handler so the build tool knows what to compile.
 
   See doc for `stedi.lambda/defentrypoint`"
   [handler]
-  ;; input-stream is a java.io.InputStream
-  (fn [{:keys [input-stream] :as req}]
-    (let [resp (handler (assoc req :payload (slurp input-stream)))]
+  ;; input is a java.io.InputStream
+  (fn [{:keys [input] :as req}]
+    (let [resp (handler (assoc req :input (slurp input)))]
       ;; :output can be a String or anything coercible
       ;; by `clojure.java.io/input-stream`
       {:output (pr-str resp)})))

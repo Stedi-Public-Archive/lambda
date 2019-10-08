@@ -4,13 +4,13 @@
 (defn wrap-slurp
   "Example middleware to show off middleware pattern with lambdas."
   [handler]
-  (fn [{:keys [input-stream] :as req}]
+  (fn [{:keys [input] :as req}]
     (let [resp (handler (-> req
-                            (assoc :payload (slurp input-stream))))]
+                            (assoc :input (slurp input))))]
       {:output (pr-str resp)})))
 
-(defn hello [{:keys [payload]}]
-  {:my-payload payload})
+(defn hello [{:keys [input]}]
+  {:my-payload input})
 
 (defentrypoint hello-lambda
   (-> hello

@@ -8,8 +8,8 @@
 (defn- make-lambda-entrypoint
   [handler-name]
   `(defn ~'-handler [is# os# context#]
-     (let [output# (-> (~handler-name {:input-stream is#
-                                       :context      context#})
+     (let [output# (-> (~handler-name {:input   is#
+                                       :context context#})
                        (:output))
            stream# (io/input-stream
                      (if (string? output#)
@@ -26,8 +26,8 @@
   that takes a lambda request map and returns a lambda response map.
 
   Request Map:
-    :input-stream - an input stream of the payload
-    :context      - an instance of `com.amazonaws.services.lambda.runtime.Context`
+    :input   - an input stream of the payload
+    :context - an instance of `com.amazonaws.services.lambda.runtime.Context`
 
   Response Map:
     :output - a String or anything coercible by `clojure.java.io/input-stream`
