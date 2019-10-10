@@ -24,24 +24,37 @@ Lambda handler so the build tool knows what to compile.
 (ns stedi.example
   (:require [stedi.lambda :refer [defentrypoint]]))
 
-(defn wrap-slurp
-  "Example middleware to demonstrate middleware pattern with Lambdas.
-
-  See doc for `stedi.lambda/defentrypoint`"
+(defn wrap-slurp-input
+  "Example middleware to demonstrate middleware pattern with lambdas. "
   [handler]
-  ;; input is a java.io.InputStream
-  (fn [{:keys [input] :as req}]
-    (let [resp (handler (assoc req :input (slurp input)))]
-      ;; :output can be a String or anything coercible
-      ;; by `clojure.java.io/input-stream`
-      {:output (pr-str resp)})))
+  (fn [req]
+    ;; :input of req is a java.io.InputStream
+    (handler (update req :input slurp))))
 
-(defn hello [{:keys [payload]}]
-  {:my-payload payload})
+(defn wrap-output
+  "Example middleware to demonstrate middleware pattern with lambdas. "
+  [handler]
+  ;; :output can be a String or anything coercible
+  ;; by `clojure.java.io/input-stream`
+  (fn [req] {:output (handler req)}))
+
+(defn hello [{:keys [input]}]
+  (format "Hello, %s!" input))
 
 (defentrypoint hello-lambda
   (-> hello
-      (wrap-slurp)))
+      wrap-slurp-input
+      wrap-output))
+
+(comment
+  (require '[clojure.java.io :as io])
+
+  ;; you can invoke the fn defined by defentrypoint directly
+
+  (hello-lambda {:input (io/input-stream (.getBytes "you"))})
+  ;; => {:output "Hello, you!"}
+  )
+
 ```
 
 **Building**
