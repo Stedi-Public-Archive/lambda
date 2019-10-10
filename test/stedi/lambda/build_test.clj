@@ -14,10 +14,9 @@
     ;; This is gross but the classes we want to test aren't available
     ;; until this test runs so `import` will fail if we don't wait and dynamically eval
     (let [output (eval `(do
-                          (with-open [is# (io/input-stream (.getBytes "Hello world"))
+                          (with-open [is# (io/input-stream (.getBytes "world"))
                                       os# (ByteArrayOutputStream.)]
                             (import '[stedi.lambda ~'Entrypoint])
                             (stedi.lambda.Entrypoint/handler is# os# nil)
-                            (read-string (str os#)))))]
-      (is (= {:my-payload "Hello world"}
-             output)))))
+                            (str os#))))]
+      (is (= "Hello, world!" output)))))
