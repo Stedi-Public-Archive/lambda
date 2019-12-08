@@ -98,7 +98,7 @@ In the AWS Lambda console, set the
 ## Philosophy
 
 `stedi/lambda` keeps dependencies to a minimum and provides a
-straightforward way to build all Lambdas for a project as seperate
+straightforward way to build all Lambdas for a project as separate
 archives (one per function). It structures the input to the Lambda as
 a [Ring][2]-like map with the intention that a rich ecosystem of
 middlewares can be built around it.
